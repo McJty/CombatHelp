@@ -1,0 +1,16 @@
+[
+{
+  "modid": "combathelp",
+  "name": "Combat Help",
+  "description": "Combat helper stuff",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["McJty"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
