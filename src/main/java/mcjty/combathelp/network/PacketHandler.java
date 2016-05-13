@@ -18,5 +18,6 @@ public class PacketHandler {
 
         // Server side
         INSTANCE.registerMessage(PacketWieldShield.Handler.class, PacketWieldShield.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(PacketHotbarHandler.Handler.class, PacketHotbarHandler.class, nextID(), Side.SERVER);
     }
 }

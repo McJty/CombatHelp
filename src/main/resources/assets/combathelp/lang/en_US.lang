@@ -1,3 +1,6 @@
 key.shieldwield=Wield Shield
+key.restoreHotbar1=Restore Hotbar 1 (use ctrl to store)
+key.restoreHotbar2=Restore Hotbar 2 (use ctrl to store)
+key.restoreHotbar3=Restore Hotbar 3 (use ctrl to store)
 key.categories.combathelp=Combat Help
 

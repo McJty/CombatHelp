@@ -2,6 +2,7 @@ package mcjty.combathelp.network;
 
 import io.netty.buffer.ByteBuf;
 import mcjty.combathelp.Config;
+import mcjty.combathelp.varia.Tools;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,14 +34,14 @@ public class PacketWieldShield implements IMessage {
         private void handle(PacketWieldShield message, MessageContext ctx) {
             EntityPlayerMP playerEntity = ctx.getServerHandler().playerEntity;
             ItemStack stack = playerEntity.inventory.offHandInventory[0];
-            if (isUsefuliOffhand(stack)) {
+            if (isUsefullOffhand(stack)) {
                 // Already ok
                 return;
             }
             // Find a shield
             for (Item shieldItem : Config.shieldOptions) {
                 if (shieldItem != null) {
-                    int slotFor = getSlotFor(new ItemStack(shieldItem, 1), playerEntity);
+                    int slotFor = Tools.getSlotFor(new ItemStack(shieldItem, 1), playerEntity, 0);
                     if (slotFor != -1) {
                         ItemStack oldstack = playerEntity.inventory.offHandInventory[0];
                         playerEntity.inventory.offHandInventory[0] = playerEntity.inventory.getStackInSlot(slotFor);
@@ -54,7 +55,7 @@ public class PacketWieldShield implements IMessage {
     }
 
     /// Check if the given item is one of the items in the config
-    private static boolean isUsefuliOffhand(ItemStack stack) {
+    private static boolean isUsefullOffhand(ItemStack stack) {
         if (stack == null) {
             return false;
         }
@@ -66,20 +67,6 @@ public class PacketWieldShield implements IMessage {
             }
         }
         return false;
-    }
-
-    private static int getSlotFor(ItemStack stack, EntityPlayerMP player) {
-        for (int i = 0; i < player.inventory.mainInventory.length; ++i) {
-            if (player.inventory.mainInventory[i] != null && stackEqualExact(stack, player.inventory.mainInventory[i])) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    private static boolean stackEqualExact(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() || stack1.getMetadata() == stack2.getMetadata()) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
 
