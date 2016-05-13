@@ -16,7 +16,7 @@ import java.io.File;
         version = CombatHelp.VERSION)
 public class CombatHelp {
     public static final String MODID = "combathelp";
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "1.0.0";
     public static final String MIN_FORGE_VER = "12.16.1.1896";
 
     @SidedProxy(clientSide="mcjty.combathelp.proxy.ClientProxy", serverSide="mcjty.combathelp.proxy.ServerProxy")
