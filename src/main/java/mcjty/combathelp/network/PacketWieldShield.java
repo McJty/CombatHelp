@@ -41,7 +41,7 @@ public class PacketWieldShield implements IMessage {
             // Find a shield
             for (Item shieldItem : Config.shieldOptions) {
                 if (shieldItem != null) {
-                    int slotFor = playerEntity.inventory.getSlotFor(new ItemStack(shieldItem, 1));
+                    int slotFor = getSlotFor(new ItemStack(shieldItem, 1), playerEntity);
                     if (slotFor != -1) {
                         ItemStack oldstack = playerEntity.inventory.offHandInventory[0];
                         playerEntity.inventory.offHandInventory[0] = playerEntity.inventory.getStackInSlot(slotFor);
@@ -53,4 +53,20 @@ public class PacketWieldShield implements IMessage {
             }
         }
     }
+
+    private static int getSlotFor(ItemStack stack, EntityPlayerMP player) {
+        for (int i = 0; i < player.inventory.mainInventory.length; ++i) {
+            if (player.inventory.mainInventory[i] != null && stackEqualExact(stack, player.inventory.mainInventory[i])) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private static boolean stackEqualExact(ItemStack stack1, ItemStack stack2) {
+        return stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() || stack1.getMetadata() == stack2.getMetadata()) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
+
 }
