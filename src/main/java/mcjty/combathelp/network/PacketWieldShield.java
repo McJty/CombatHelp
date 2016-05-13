@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import mcjty.combathelp.Config;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -34,7 +33,7 @@ public class PacketWieldShield implements IMessage {
         private void handle(PacketWieldShield message, MessageContext ctx) {
             EntityPlayerMP playerEntity = ctx.getServerHandler().playerEntity;
             ItemStack stack = playerEntity.inventory.offHandInventory[0];
-            if (stack != null && stack.getItem() instanceof ItemShield) {
+            if (isUsefuliOffhand(stack)) {
                 // Already ok
                 return;
             }
@@ -52,6 +51,21 @@ public class PacketWieldShield implements IMessage {
                 }
             }
         }
+    }
+
+    /// Check if the given item is one of the items in the config
+    private static boolean isUsefuliOffhand(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+        for (Item shieldItem : Config.shieldOptions) {
+            if (shieldItem != null) {
+                if (shieldItem == stack.getItem()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static int getSlotFor(ItemStack stack, EntityPlayerMP player) {
