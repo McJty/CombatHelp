@@ -16,7 +16,7 @@ public class KeyBindings {
     public static KeyBinding restoreHotbar3;
 
     public static void init() {
-        shieldHotSwap = new KeyBinding("key.shieldwield", KeyConflictContext.IN_GAME, Keyboard.KEY_BACKSLASH, "key.categories.combathelp");
+        shieldHotSwap = new KeyBinding("key.shieldwield", KeyConflictContext.IN_GAME, Keyboard.KEY_BACK, "key.categories.combathelp");
         restoreHotbar1 = new KeyBinding("key.restoreHotbar1", KeyConflictContext.IN_GAME, Keyboard.KEY_NUMPAD7, "key.categories.combathelp");
         restoreHotbar2 = new KeyBinding("key.restoreHotbar2", KeyConflictContext.IN_GAME, Keyboard.KEY_NUMPAD8, "key.categories.combathelp");
         restoreHotbar3 = new KeyBinding("key.restoreHotbar3", KeyConflictContext.IN_GAME, Keyboard.KEY_NUMPAD9, "key.categories.combathelp");
