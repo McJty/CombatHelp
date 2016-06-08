@@ -34,14 +34,19 @@ public class PacketWieldShield implements IMessage {
         private void handle(PacketWieldShield message, MessageContext ctx) {
             EntityPlayerMP playerEntity = ctx.getServerHandler().playerEntity;
             ItemStack stack = playerEntity.inventory.offHandInventory[0];
+            System.out.println("Handler.handle: 1");
             if (isUsefullOffhand(stack)) {
+                System.out.println("Handler.handle: 2");
                 // Already ok
                 return;
             }
+            System.out.println("Handler.handle: 3");
             // Find a shield
             for (Item shieldItem : Config.shieldOptions) {
+                System.out.println("shieldItem = " + shieldItem);
                 if (shieldItem != null) {
                     int slotFor = Tools.getSlotFor(new ItemStack(shieldItem, 1), playerEntity, 0);
+                    System.out.println("slotFor = " + slotFor);
                     if (slotFor != -1) {
                         ItemStack oldstack = playerEntity.inventory.offHandInventory[0];
                         playerEntity.inventory.offHandInventory[0] = playerEntity.inventory.getStackInSlot(slotFor);
