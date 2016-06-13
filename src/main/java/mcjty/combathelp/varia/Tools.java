@@ -1,9 +1,19 @@
 package mcjty.combathelp.varia;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 
 public class Tools {
+
+    public static int getBlockingItem(EntityPlayerMP player, int startfrom) {
+        for (int i = startfrom; i < player.inventory.mainInventory.length; ++i) {
+            if (player.inventory.mainInventory[i] != null && player.inventory.mainInventory[i].getItemUseAction() == EnumAction.BLOCK) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public static int getSlotFor(ItemStack stack, EntityPlayerMP player, int startfrom) {
         for (int i = startfrom; i < player.inventory.mainInventory.length; ++i) {

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mcjty.combathelp.Config;
 import mcjty.combathelp.varia.Tools;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -34,19 +35,15 @@ public class PacketWieldShield implements IMessage {
         private void handle(PacketWieldShield message, MessageContext ctx) {
             EntityPlayerMP playerEntity = ctx.getServerHandler().playerEntity;
             ItemStack stack = playerEntity.inventory.offHandInventory[0];
-            System.out.println("Handler.handle: 1");
             if (isUsefullOffhand(stack)) {
-                System.out.println("Handler.handle: 2");
                 // Already ok
                 return;
             }
-            System.out.println("Handler.handle: 3");
+
             // Find a shield
             for (Item shieldItem : Config.shieldOptions) {
-                System.out.println("shieldItem = " + shieldItem);
                 if (shieldItem != null) {
                     int slotFor = Tools.getSlotFor(new ItemStack(shieldItem, 1), playerEntity, 0);
-                    System.out.println("slotFor = " + slotFor);
                     if (slotFor != -1) {
                         ItemStack oldstack = playerEntity.inventory.offHandInventory[0];
                         playerEntity.inventory.offHandInventory[0] = playerEntity.inventory.getStackInSlot(slotFor);
@@ -56,6 +53,16 @@ public class PacketWieldShield implements IMessage {
                     }
                 }
             }
+            // If we didn't find a shield like that we try to find an item that can block
+            int slotFor = Tools.getBlockingItem(playerEntity, 0);
+            if (slotFor != -1) {
+                ItemStack oldstack = playerEntity.inventory.offHandInventory[0];
+                playerEntity.inventory.offHandInventory[0] = playerEntity.inventory.getStackInSlot(slotFor);
+                playerEntity.inventory.setInventorySlotContents(slotFor, oldstack);
+                playerEntity.openContainer.detectAndSendChanges();
+                return;
+            }
+
         }
     }
 
@@ -64,14 +71,20 @@ public class PacketWieldShield implements IMessage {
         if (stack == null) {
             return false;
         }
-        for (Item shieldItem : Config.shieldOptions) {
-            if (shieldItem != null) {
-                if (shieldItem == stack.getItem()) {
-                    return true;
-                }
-            }
+
+        if (stack.getItemUseAction() == EnumAction.BLOCK) {
+            return true;
         }
         return false;
+//
+//        for (Item shieldItem : Config.shieldOptions) {
+//            if (shieldItem != null) {
+//                if (shieldItem == stack.getItem()) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
     }
 
 
