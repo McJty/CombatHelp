@@ -6,6 +6,12 @@ public class PlayerInventoryStore {
 
     private PlayerHotbarStore store[] = new PlayerHotbarStore[3];
 
+    public void copyFrom(PlayerInventoryStore source) {
+        store[0] = source.store[0];
+        store[1] = source.store[1];
+        store[2] = source.store[2];
+    }
+
     public PlayerInventoryStore() {
         for (int i = 0 ; i < store.length ; i++) {
             store[i] = new PlayerHotbarStore();
