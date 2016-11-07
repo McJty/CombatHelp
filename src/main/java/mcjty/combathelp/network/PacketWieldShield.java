@@ -43,7 +43,7 @@ public class PacketWieldShield implements IMessage {
             // Find a shield
             for (Item shieldItem : Config.shieldOptions) {
                 if (shieldItem != null) {
-                    int slotFor = Tools.getSlotFor(new ItemStack(shieldItem, 1), playerEntity, 0);
+                    int slotFor = Tools.getSlotFor(new ItemStack(shieldItem, 1), playerEntity, new boolean[0]);
                     if (slotFor != -1) {
                         ItemStack oldstack = playerEntity.inventory.offHandInventory[0];
                         playerEntity.inventory.offHandInventory[0] = playerEntity.inventory.getStackInSlot(slotFor);

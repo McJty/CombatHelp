@@ -15,15 +15,19 @@ public class Tools {
         return -1;
     }
 
-    public static int getSlotFor(ItemStack stack, EntityPlayerMP player, int startfrom) {
-        for (int i = startfrom; i < player.inventory.mainInventory.length; ++i) {
-            if (player.inventory.mainInventory[i] != null && stackEqualExact(stack, player.inventory.mainInventory[i])) {
-                return i;
+    public static int getSlotFor(ItemStack stack, EntityPlayerMP player, boolean[] locked) {
+        for (int i = 0; i < player.inventory.mainInventory.length; ++i) {
+            if (i >= locked.length || !locked[i]) {
+                if (player.inventory.mainInventory[i] != null && stackEqualExact(stack, player.inventory.mainInventory[i])) {
+                    return i;
+                }
             }
         }
-        for (int i = startfrom; i < player.inventory.mainInventory.length; ++i) {
-            if (player.inventory.mainInventory[i] != null && stackEqualExactNoNBT(stack, player.inventory.mainInventory[i])) {
-                return i;
+        for (int i = 0; i < player.inventory.mainInventory.length; ++i) {
+            if (i >= locked.length || !locked[i]) {
+                if (player.inventory.mainInventory[i] != null && stackEqualExactNoNBT(stack, player.inventory.mainInventory[i])) {
+                    return i;
+                }
             }
         }
         return -1;

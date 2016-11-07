@@ -49,7 +49,7 @@ public class PlayerHotbarStore {
 
     public void restore(EntityPlayerMP player) {
         if (offhand != null) {
-            int slotFor = Tools.getSlotFor(offhand, player, 0);
+            int slotFor = Tools.getSlotFor(offhand, player, new boolean[0]);
             if (slotFor != -1) {
                 ItemStack oldstack = player.inventory.offHandInventory[0];
                 player.inventory.offHandInventory[0] = player.inventory.getStackInSlot(slotFor);
@@ -57,14 +57,19 @@ public class PlayerHotbarStore {
             }
         }
 
+        boolean[] locked = new boolean[hotbar.length];
+        for (int i = 0 ; i < locked.length ; i++) {
+            locked[i] = false;
+        }
         for (int i = 0 ; i < hotbar.length ; i++) {
             if (hotbar[i] != null) {
-                int slotFor = Tools.getSlotFor(hotbar[i], player, i);
+                int slotFor = Tools.getSlotFor(hotbar[i], player, locked);
                 if (slotFor != -1 && slotFor != i) {
                     ItemStack oldstack = player.inventory.mainInventory[i];
                     player.inventory.mainInventory[i] = player.inventory.getStackInSlot(slotFor);
                     player.inventory.setInventorySlotContents(slotFor, oldstack);
                 }
+                locked[i] = true;
             }
         }
 
