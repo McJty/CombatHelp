@@ -1,26 +1,30 @@
 package mcjty.combathelp.properties;
 
 import mcjty.combathelp.varia.Tools;
+import mcjty.lib.tools.ChatTools;
+import mcjty.lib.tools.ItemStackList;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
 
 public class PlayerHotbarStore {
-    private ItemStack[] hotbar = new ItemStack[9];
-    private ItemStack offhand;
+    private ItemStackList hotbar = ItemStackList.create(9);
+    private ItemStack offhand = ItemStackTools.getEmptyStack();
 
     public void saveNBTData(NBTTagCompound compound) {
-        if (offhand != null) {
+        if (ItemStackTools.isValid(offhand)) {
             NBTTagCompound tagCompound = new NBTTagCompound();
             offhand.writeToNBT(tagCompound);
             compound.setTag("off", tagCompound);
         }
 
-        for (int i = 0 ; i < hotbar.length ; i++) {
-            if (hotbar[i] != null) {
+        for (int i = 0 ; i < hotbar.size() ; i++) {
+            if (ItemStackTools.isValid(hotbar.get(i))) {
                 NBTTagCompound tagCompound = new NBTTagCompound();
-                hotbar[i].writeToNBT(tagCompound);
+                hotbar.get(i).writeToNBT(tagCompound);
                 compound.setTag("hot" + i, tagCompound);
             }
         }
@@ -28,45 +32,47 @@ public class PlayerHotbarStore {
 
     public void loadNBTData(NBTTagCompound compound) {
         if (compound.hasKey("off")) {
-            offhand = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("off"));
+            offhand = ItemStackTools.loadFromNBT(compound.getCompoundTag("off"));
         } else {
-            offhand = null;
+            offhand = ItemStackTools.getEmptyStack();
         }
-        for (int i = 0 ; i < hotbar.length ; i++) {
+        for (int i = 0 ; i < hotbar.size() ; i++) {
             if (compound.hasKey("hot" + i)) {
-                hotbar[i] = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("hot" + i));
+                hotbar.set(i, ItemStackTools.loadFromNBT(compound.getCompoundTag("hot" + i)));
             } else {
-                hotbar[i] = null;
+                hotbar.set(i, ItemStackTools.getEmptyStack());
             }
         }
     }
 
     public void remember(EntityPlayerMP player) {
-        offhand = player.inventory.offHandInventory[0];
-        System.arraycopy(player.inventory.mainInventory, 0, hotbar, 0, hotbar.length);
-        player.addChatComponentMessage(new TextComponentString("Saved hotbar and offhand configuration"));
+        offhand = player.getHeldItemOffhand();
+        for (int i = 0 ; i < hotbar.size() ; i++) {
+            hotbar.set(i, player.inventory.getStackInSlot(i));
+        }
+        ChatTools.addChatMessage(player, new TextComponentString("Saved hotbar and offhand configuration"));
     }
 
     public void restore(EntityPlayerMP player) {
-        if (offhand != null) {
+        if (ItemStackTools.isValid(offhand)) {
             int slotFor = Tools.getSlotFor(offhand, player, new boolean[0]);
             if (slotFor != -1) {
-                ItemStack oldstack = player.inventory.offHandInventory[0];
-                player.inventory.offHandInventory[0] = player.inventory.getStackInSlot(slotFor);
+                ItemStack oldstack = player.getHeldItemOffhand();
+                player.setHeldItem(EnumHand.OFF_HAND, player.inventory.getStackInSlot(slotFor));
                 player.inventory.setInventorySlotContents(slotFor, oldstack);
             }
         }
 
-        boolean[] locked = new boolean[hotbar.length];
+        boolean[] locked = new boolean[hotbar.size()];
         for (int i = 0 ; i < locked.length ; i++) {
             locked[i] = false;
         }
-        for (int i = 0 ; i < hotbar.length ; i++) {
-            if (hotbar[i] != null) {
-                int slotFor = Tools.getSlotFor(hotbar[i], player, locked);
+        for (int i = 0 ; i < hotbar.size() ; i++) {
+            if (ItemStackTools.isValid(hotbar.get(i))) {
+                int slotFor = Tools.getSlotFor(hotbar.get(i), player, locked);
                 if (slotFor != -1 && slotFor != i) {
-                    ItemStack oldstack = player.inventory.mainInventory[i];
-                    player.inventory.mainInventory[i] = player.inventory.getStackInSlot(slotFor);
+                    ItemStack oldstack = player.getHeldItemOffhand();
+                    player.setHeldItem(EnumHand.OFF_HAND, player.inventory.getStackInSlot(slotFor));
                     player.inventory.setInventorySlotContents(slotFor, oldstack);
                 }
                 locked[i] = true;
