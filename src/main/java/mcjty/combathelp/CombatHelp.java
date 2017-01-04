@@ -1,5 +1,7 @@
 package mcjty.combathelp;
 
+import mcjty.combathelp.compat.MainCompatHandler;
+import mcjty.combathelp.proxy.CommonProxy;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -7,7 +9,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
-import mcjty.combathelp.proxy.CommonProxy;
 
 import java.io.File;
 
@@ -46,7 +47,7 @@ public class CombatHelp {
         config = new Configuration(new File(modConfigDir, "combathelp.cfg"));
         proxy.preInit(e);
 
-//        FMLInterModComms.sendMessage("Waila", "register", "mcjty.wailasupport.WailaCompatibility.load");
+        MainCompatHandler.registerWheel();
     }
 
     /**
