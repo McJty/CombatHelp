@@ -17,10 +17,11 @@ import java.io.File;
                         "required-after:compatlayer@[" + CombatHelp.COMPATLAYER_VER + ",);" +
                         "after:Forge@[" + CombatHelp.MIN_FORGE10_VER + ",);" +
                         "after:forge@[" + CombatHelp.MIN_FORGE11_VER + ",)",
-        version = CombatHelp.VERSION)
+        version = CombatHelp.VERSION,
+        acceptedMinecraftVersions = "[1.10,1.12)")
 public class CombatHelp {
     public static final String MODID = "combathelp";
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.1.1";
     public static final String MIN_FORGE10_VER = "12.18.1.2082";
     public static final String MIN_FORGE11_VER = "13.19.0.2157";
     public static final String COMPATLAYER_VER = "0.0.35alpha";
